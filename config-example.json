@@ -1,0 +1,12 @@
+{
+  "credentials": {
+    "username": "----",
+    "password": "---------",
+    "expiration": 36000
+  },
+  "hmac_secret": "-----------------------",
+  "integration_id": "001",
+  "host": "https://example.com/api",
+  "notification_callback_url": "accept/notification",
+  "response_callback_url": "accept/response"
+}

@@ -1,9 +1,14 @@
-import express from "express"
-import bodyParser from "body-parser"
-import morgan from "morgan"
+const express = require("express")
+const bodyParser = require("body-parser")
+const morgan = require("morgan")
 
-export const router = express.Router()
-export const app = express()
+const router = express.Router()
+const app = express()
+const server = require("http").createServer(app)
+
+exports.router = router
+exports.server = server
+exports.app = app
 
 const { NODE_ENV } = process.env
 
@@ -30,9 +35,3 @@ app.use(function(err, req, res, next) {
     }
   )
 })
-
-export const startServer = PORT => {
-  app.listen(PORT)
-}
-
-export const closeServer = () => app.close()

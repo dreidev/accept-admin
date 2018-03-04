@@ -1,0 +1,62 @@
+export const RESPONSE_HMAC_FIELDS_DATA = {
+  amount_cents: 1,
+  created_at: 1,
+  currency: 1,
+  error_occured: 1,
+  has_parent_transaction: 1,
+  id: 1,
+  integration_id: 1,
+  is_3d_secure: 1,
+  is_auth: 1,
+  is_capture: 1,
+  is_refunded: 1,
+  is_standalone_payment: 1,
+  is_voided: 1,
+  order: 1,
+  owner: 1,
+  pending: 1,
+  "source_data.pan": 1,
+  "source_data.sub_type": 1,
+  "source_data.type": 1,
+  success: 1,
+}
+
+export const TRANSACTION_HMAC_FIELDS_DATA = {
+  amount_cents: 1,
+  created_at: 1,
+  currency: 1,
+  error_occured: 1,
+  has_parent_transaction: 1,
+  id: 1,
+  integration_id: 1,
+  is_3d_secure: 1,
+  is_auth: 1,
+  is_capture: 1,
+  is_refunded: 1,
+  is_standalone_payment: 1,
+  is_voided: 1,
+  order: {
+    id: 1,
+  },
+  owner: 1,
+  pending: 1,
+  source_data: {
+    pan: 1,
+    sub_type: 1,
+    type: 1,
+  },
+  success: 1,
+}
+
+export const DELIVERY_HMAC_FIELDS_DATA = {
+  id: 1,
+  order: {
+    id: 1,
+  },
+  merchant: 1,
+  created_at: 1,
+  status: 1,
+  extra_description: 1,
+  gps_long: 1,
+  gps_lat: 1,
+}

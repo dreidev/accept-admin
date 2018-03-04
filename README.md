@@ -44,7 +44,11 @@ await AcceptAdmin.pay({
 })
 ```
 
-see tests for other available functions
+See tests for other available functions
 
 This package has partial coverage of the accept admin API but is mainly meant
 for manging payment and an tokanization of credit cards.
+
+The package is maintianed by DREIDEV and is not an offical paymobsolutions/accept package
+
+Licence MIT

@@ -9,6 +9,7 @@ const API = Axios.create({
     "X-CSRFToken": null,
   },
 })
+export default API
 
 export async function voidTransaction({ token, transaction_id }) {
   return API.post(`/acceptance/void_refund/void?token=${token}`, {
@@ -27,7 +28,7 @@ export async function refundTransaction({
   })
 }
 
-export function pay({ source, billing, payment_token, api_source }) {
+export function pay({ source, billing, payment_token, api_source = "IFRAME" }) {
   return API.post(`/acceptance/payments/pay`, {
     source,
     billing,
@@ -64,7 +65,7 @@ export function createPaymentKey({
   expiration = DEFAULT_TOKEN_EXPIRATION_TIME,
   currency = "EGP",
 }) {
-  API.post(`/acceptance/payment_keys?token=${token}`, {
+  return API.post(`/acceptance/payment_keys?token=${token}`, {
     amount_cents,
     order_id,
     expiration,
@@ -112,5 +113,3 @@ export async function getUser({
   }
   return API.post(`/auth/tokens`, { username, password, expiration })
 }
-
-export default API
