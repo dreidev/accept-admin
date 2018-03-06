@@ -18,7 +18,7 @@
     "jest": "jest",
     "lint": "eslint --fix src/**",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "prepublish": "npm run build"
+    "prepare": "npm run build"
   },
   "size-limit": [
     {
@@ -46,6 +46,7 @@
   "homepage": "https://github.com/dreidev/accept-admin#readme",
   "devDependencies": {
     "axios-mock-adapter": "^1.10.0",
+    "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.2",
     "babel-jest": "^21.2.0",
     "babel-plugin-module-resolver": "^3.0.0",
