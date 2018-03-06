@@ -1,4 +1,14 @@
 language: node_js
 node_js:
   - "9"
+install:
+  - npm install
+script:
+  - npm test
+cache:
+  directories:
+    - node_modules
+branches:
+  only:
+    - master
 after_success: 'npm run coveralls'
