@@ -5,10 +5,14 @@ router.use(
   AcceptRouter({
     hmac_secret: ACCEPT_CONFIG.hmac_secret,
     onNotification(req) {
-      console.log("Notification", req.body)
+      if (!process.env.CI) {
+        console.log("Notification", req.body)
+      }
     },
     onResponse(req) {
-      console.log("Response", req.query)
+      if (!process.env.CI) {
+        console.log("Response", req.query)
+      }
       return { message: "success" }
     },
   })

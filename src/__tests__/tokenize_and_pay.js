@@ -53,7 +53,7 @@ describe("Accept Pay and Tokenize", async () => {
     const res = await Accept.tokenize({
       source: MASTER_CARD,
     })
-    console.log(`tokenized`, res)
+    console.log(`tokenized`)
     expect(res.token).not.toBe(null)
     card_token = res.token
   })
