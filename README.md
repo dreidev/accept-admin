@@ -1,7 +1,9 @@
 # Accept Admin
 
-Package for managing inegration with the accept payment service provided by
+Package for managing integration with the accept payment service provided by
 paymobsolutions for lack of an offical one.
+
+[![Build Status](https://travis-ci.org/dreidev/accept-admin.png?branch=master)](https://travis-ci.org/dreidev/accept-admin) [![Coverage Status](https://coveralls.io/repos/dreidev/accept-admin/badge.svg?branch=master)](https://coveralls.io/r/dreidev/accept-admin?branch=master)
 
 ## Getting Started
 
@@ -12,9 +14,9 @@ npm install accept-admin
 Include your paymob accept credentials in a gitingnored `.env` or configuration
 file
 
-```json
-// config.json
-{
+```js
+// config.js
+module.exports = {
   "credentials": {
     "username": process.env.ACCEPT_USERNAME,
     "password": process.env.ACCEPT_PASSWORD,
@@ -32,8 +34,11 @@ Import the accept admin instance and configure it
 
 ```js
 import AcceptAdmin from "accept-admin"
+// or in node < 10 you can
+// const { Accept } = require("accept-admin")
+// const AcceptAdmin = require("accept-admin").default
 
-AcceptAdmin.configure(ACCEPT_CONFIG)
+AcceptAdmin.config(ACCEPT_CONFIG)
 
 //... later in your code
 
@@ -58,7 +63,9 @@ one possible workflow with express
 ```js
 // app.js
 const express = require("express")
-const { AcceptRouter } = require("accept-admin/express_router")
+const { AcceptRouter } = require("accept-admin")
+// or
+// const { AcceptRouter } = require("accept-admin/lib/express_router")
 
 const app = express()
 
@@ -81,14 +88,18 @@ and when starting your server
 ```js
 // server.js
 const app = require("./app")
-const AcceptAdmin = require("./accept-admin")
+const { Accept } = require("./accept-admin")
 const ACCEPT_CONFIG = require("./config")
 
-AcceptAdmin.config(ACCEPT_CONFIG)
+Accept.config(ACCEPT_CONFIG)
 
 (async () => {
-  await AcceptAdmin.init() // get auth_token and set integration callback hooks like in config
-  app.listend(process.env.PORT, ()=> console.log("server started"))
+  // get auth_token and assign it ot the instance 
+  // and set integration callback hooks to
+  // integration.host + integration.response_callback_url as configured
+  await Accept.init()
+  // then start app
+  app.listen(process.env.PORT, ()=> console.log("server started"))
 })()
 ```
 

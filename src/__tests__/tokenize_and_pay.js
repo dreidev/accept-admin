@@ -4,7 +4,7 @@ import ACCEPT_CONFIG from "../../config"
 import { startTunnel, closeTunnel } from "./helper/localtunnel"
 import { startServer, closeServer } from "./helper/util"
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000
 
 describe("Accept Pay and Tokenize", async () => {
   let card_token = null
@@ -13,7 +13,10 @@ describe("Accept Pay and Tokenize", async () => {
   beforeAll(async () => {
     const PORT = 3209
 
-    const [host] = await Promise.all([startTunnel(PORT), startServer({ PORT })])
+    const [{ url: host }] = await Promise.all([
+      startTunnel(PORT),
+      startServer({ PORT }),
+    ])
 
     console.log(host)
     console.log(`started localtunnel at ${host}`)

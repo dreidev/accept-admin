@@ -16,6 +16,12 @@ import {
   DEFAULT_INTEGRATION,
 } from "./constants"
 
+export {
+  AcceptRouter,
+  hasMatchingNotificationHookWithHmacSecret,
+  hasMatchingResponseHookWithHmacSecret,
+} from "./express_router"
+
 export class AcceptAdmin {
   token = null
   merchant_id = null
@@ -392,4 +398,5 @@ function _processCreditCardSource({ source, card_token }) {
   return source
 }
 
-export default new AcceptAdmin()
+export const Accept = new AcceptAdmin()
+export default Accept

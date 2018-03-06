@@ -23,12 +23,12 @@ function ConfigureAcceptRouter({
 
   router.post(
     notificationEndpoint,
-    hasMatchingNotificationHookHmacWithSecret(hmac_secret),
+    hasMatchingNotificationHookWithHmacSecret(hmac_secret),
     hookWrapper(onNotification)
   )
   router.get(
     responseEndpoint,
-    hasMatchingResponseHookHmacWithSecret(hmac_secret),
+    hasMatchingResponseHookWithHmacSecret(hmac_secret),
     hookWrapper(onResponse)
   )
 
@@ -37,7 +37,7 @@ function ConfigureAcceptRouter({
 
 const DEFAULT_ACTION = async () => {}
 
-function hasMatchingNotificationHookHmacWithSecret(hmac_secret) {
+function hasMatchingNotificationHookWithHmacSecret(hmac_secret) {
   if (!hmac_secret)
     throw new Error(
       `You must spicify hmac_secret in order to validate callback hooks got ${
@@ -65,7 +65,7 @@ function hasMatchingNotificationHookHmacWithSecret(hmac_secret) {
   }
 }
 
-function hasMatchingResponseHookHmacWithSecret(hmac_secret) {
+function hasMatchingResponseHookWithHmacSecret(hmac_secret) {
   if (!hmac_secret)
     throw new Error(
       `You must spicify hmac_secret in order to validate callback hooks got ${
@@ -99,6 +99,6 @@ function hookWrapper(customAction = DEFAULT_ACTION) {
 
 exports.AcceptRouter = ConfigureAcceptRouter
 
-exports.hasMatchingNotificationHookHmacWithSecret = hasMatchingNotificationHookHmacWithSecret
-exports.hasMatchingResponseHookHmacWithSecret = hasMatchingResponseHookHmacWithSecret
+exports.hasMatchingNotificationHookWithHmacSecret = hasMatchingNotificationHookWithHmacSecret
+exports.hasMatchingResponseHookWithHmacSecret = hasMatchingResponseHookWithHmacSecret
 exports.hookWrapper = hookWrapper
