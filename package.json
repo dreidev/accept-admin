@@ -13,19 +13,12 @@
     "start": "concurrently --kill-others \"npm run start:cjs\" \"npm run start:es\"",
     "start:cjs": "cross-env BABEL_ENV=cjs babel -w src --out-dir lib --ignore './src/__tests__/**'",
     "start:es": "cross-env BABEL_ENV=es babel -w src --out-dir es --ignore './src/__tests__/**'",
-    "size": "size-limit",
     "test": "npm run lint && jest --coverage",
     "jest": "jest",
     "lint": "eslint --fix src/**",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "prepare": "npm run build"
   },
-  "size-limit": [
-    {
-      "path": "lib/index.js",
-      "limit": "15 KB"
-    }
-  ],
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/dreidev/accept-admin.git"
@@ -79,15 +72,8 @@
     "morgan": "^1.9.0",
     "ngrok": "^2.2.26",
     "prettier": "^1.8.2",
-    "size-limit": "^0.13.2",
     "supertest": "^3.0.0",
     "xhr-mock": "^1.9.1"
-  },
-  "peerDependencies": {
-    "axios": "*",
-    "express": ">= 4",
-    "body-parser": ">= 1",
-    "crypto-js": ">= 3.1"
   },
   "jest": {
     "testEnvironment": "node",
