@@ -6,12 +6,12 @@ router.use(
     hmac_secret: ACCEPT_CONFIG.hmac_secret,
     onNotification(req) {
       if (!process.env.CI) {
-        console.log("Notification", req.body)
+        // console.log("Notification", req.body)
       }
     },
     onResponse(req) {
       if (!process.env.CI) {
-        console.log("Response", req.query)
+        // console.log("Response", req.query)
       }
       return { message: "success" }
     },
