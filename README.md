@@ -11,8 +11,7 @@ paymobsolutions for lack of an offical one.
 npm install accept-admin
 ```
 
-Include your paymob accept credentials in a gitingnored `.env` or configuration
-file
+Include your paymob accept credentials in a gitingnored `.env` or configuration file
 
 ```js
 // config.js

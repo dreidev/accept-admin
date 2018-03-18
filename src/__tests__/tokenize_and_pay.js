@@ -4,7 +4,7 @@ import ACCEPT_CONFIG from "../../config"
 import { startTunnel, closeTunnel } from "./helper/localtunnel"
 import { startServer, closeServer } from "./helper/util"
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 40000
 
 describe("Accept Pay and Tokenize", async () => {
   let card_token = null

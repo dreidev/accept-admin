@@ -26,13 +26,12 @@ const RESPONSE_HMAC_FIELDS = [
 const TOKEN_HMAC_FIELDS = [
   "card_subtype",
   "created_at",
-  // "email",
+  "email",
   "id",
   "masked_pan",
   "merchant_id",
   "order_id",
   "token",
-  // "user_added",
 ]
 
 const TRANSACTION_HMAC_FIELDS = [
