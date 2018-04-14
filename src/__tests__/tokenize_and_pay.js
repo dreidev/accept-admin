@@ -1,5 +1,5 @@
 import Accept from "../index"
-import { MASTER_CARD, VISA_CARD } from "../constants"
+// import { MASTER_CARD, VISA_CARD } from "../constants"
 import ACCEPT_CONFIG from "../../config"
 import { startTunnel, closeTunnel } from "./helper/localtunnel"
 import { startServer, closeServer } from "./helper/util"
@@ -9,7 +9,7 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 40000
 describe("Accept Pay and Tokenize", async () => {
   let card_token = null
   let void_transaction_id = null
-  let refund_transaction_id = null
+  // let refund_transaction_id = null
   beforeAll(async () => {
     const PORT = 3209
 
@@ -87,7 +87,7 @@ describe("Accept Pay and Tokenize", async () => {
       card_token,
       amount_cents: 400,
     })
-    refund_transaction_id = res.id
+    // refund_transaction_id = res.id
     void_transaction_id = res.id
     expect(+res.amount_cents).toEqual(400)
   })
