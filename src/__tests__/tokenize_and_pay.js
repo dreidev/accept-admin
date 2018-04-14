@@ -1,5 +1,5 @@
 import Accept from "../index"
-import { MASTER_CARD } from "../constants"
+import { MASTER_CARD, VISA_CARD } from "../constants"
 import ACCEPT_CONFIG from "../../config"
 import { startTunnel, closeTunnel } from "./helper/localtunnel"
 import { startServer, closeServer } from "./helper/util"
@@ -51,7 +51,7 @@ describe("Accept Pay and Tokenize", async () => {
     expect(Accept.token).not.toBe(null)
     console.log(`tokenizing`)
     const res = await Accept.tokenize({
-      source: MASTER_CARD,
+      source: ACCEPT_CONFIG.REAL_CARD,
     })
     console.log(`tokenized`)
     expect(res.token).not.toBe(null)
@@ -64,16 +64,16 @@ describe("Accept Pay and Tokenize", async () => {
    * token does not need to be provided if instance is already loggedin or credentials is set
    * if any is already present none is recomputed
    */
-  test("pay", async () => {
-    expect(Accept.token).not.toBe(null)
-    console.log(`paying`)
-    const res = await Accept.pay({
-      source: { ...MASTER_CARD, subtype: "CARD" },
-      amount_cents: 300,
-    })
-    void_transaction_id = res.id
-    expect(res.amount_cents).toEqual(300)
-  })
+  // test("pay", async () => {
+  //   expect(Accept.token).not.toBe(null)
+  //   console.log(`paying`)
+  //   const res = await Accept.pay({
+  //     source: { ...MASTER_CARD, subtype: "CARD" },
+  //     amount_cents: 300,
+  //   })
+  //   void_transaction_id = res.id
+  //   expect(res.amount_cents).toEqual("300")
+  // })
 
   /**
    * using the pay function with card token collected from the tokenization test
@@ -88,24 +88,24 @@ describe("Accept Pay and Tokenize", async () => {
       amount_cents: 400,
     })
     refund_transaction_id = res.id
-    expect(res.amount_cents).toEqual(400)
+    void_transaction_id = res.id
+    expect(+res.amount_cents).toEqual(400)
   })
 
   /**
    * paritally refunding transaction using transaction_id from last payment
    * refund is never full as the payment processor fees are still applied
    */
-  test("refund transaction", async () => {
-    expect(Accept.token).not.toBe(null)
-    expect(refund_transaction_id).not.toBe(null)
-    const res = await Accept.refundTransaction({
-      transaction_id: refund_transaction_id,
-      amount_cents: 300,
-    })
-    expect(res.status).toEqual(201)
-    expect(res.data.amount_cents).toEqual(300)
-    // expect(res.data.id).toEqual(refund_transaction_id)
-  })
+  // test("refund transaction", async () => {
+  //   expect(Accept.token).not.toBe(null)
+  //   expect(refund_transaction_id).not.toBe(null)
+  //   const res = await Accept.refundTransaction({
+  //     transaction_id: refund_transaction_id,
+  //     amount_cents: 300,
+  //   })
+  //   expect(res.amount_cents).toEqual(300)
+  //   expect(res.transaction_id).toEqual(refund_transaction_id)
+  // })
 
   /**
    * void transaction using transaction_id from last payment
@@ -118,7 +118,7 @@ describe("Accept Pay and Tokenize", async () => {
     const res = await Accept.voidTransaction({
       transaction_id: void_transaction_id,
     })
-    expect(res.status).toEqual(201)
-    // expect(res.data.id).toEqual(void_transaction_id)
+    expect(res.is_void).toEqual(true)
+    expect(res.parent_transaction).toEqual(+void_transaction_id)
   })
 })

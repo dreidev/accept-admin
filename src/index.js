@@ -163,9 +163,9 @@ export class AcceptAdmin {
       billing: (optional) billing address for credit card similar to one set for shipping
       card_token: (optional) tokonized card token if included no need to include source
       source: {
-        "identifier": "5123456789012346",  // card number, will be card token in case of saved card
+        "identifier": "5123456789012346",  // if CARD then card number, if TOKEN then token, if WALLET then phone number, and if CASH then "cash" and billing is required
+        "subtype": ["CARD", "TOKEN", "WALLET", "CASH"],  // will be TOKEN in case of saved card
         "sourceholder_name": "Test Account", // OPTIONAL when subtype: TOKEN
-        "subtype": "CARD",  // will be TOKEN in case of saved card
         "expiry_month": "05", // OPTIONAL when subtype: TOKEN
         "expiry_year": "17", // OPTIONAL when subtype: TOKEN
         "cvn": "123" // OPTIONAL when subtype: TOKEN
@@ -182,7 +182,8 @@ export class AcceptAdmin {
       source,
       billing,
       payment_token,
-      api_source: options.api_source, // setting IFRAME has a consistent response for both mobile and iframe
+      // setting IFRAME makes it idetical to the responce sent over the web
+      api_source: options.api_source,
     })
     return res.data
   }
@@ -253,6 +254,7 @@ export class AcceptAdmin {
       order: (optional) indecate that this payment token is for this order
       order_id: (optional)  the id of the order that is to be made
     }
+    @returns {string} payment_token
   */
   async getPaymentToken({ payment_token, ...options } = {}) {
     if (payment_token) {
@@ -299,13 +301,15 @@ export class AcceptAdmin {
   @refreshTokenOnceIfExpired
   async voidTransaction(config) {
     let { token } = await this._processCredentials(config)
-    return voidTransaction({ token, ...config })
+    let res = await voidTransaction({ token, ...config })
+    return res.data
   }
 
   @refreshTokenOnceIfExpired
   async refundTransaction(config) {
     let { token } = await this._processCredentials(config)
-    return refundTransaction({ token, ...config })
+    let res = await refundTransaction({ token, ...config })
+    return res.data
   }
 
   async _processCredentials({

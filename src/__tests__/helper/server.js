@@ -13,7 +13,7 @@ router.use(
       if (!process.env.CI) {
         // console.log("Response", req.query)
       }
-      return { message: "success" }
+      // return { message: "success" }
     },
   })
 )

@@ -12,6 +12,8 @@ const DEFAULT_RESPONSE_ENDPOINT = `/accept/response`
 exports.DEFAULT_NOTIFICATION_ENDPOINT = DEFAULT_NOTIFICATION_ENDPOINT
 exports.DEFAULT_RESPONSE_ENDPOINT = DEFAULT_RESPONSE_ENDPOINT
 
+const DEFAULT_ACTION = async () => {}
+
 function ConfigureAcceptRouter({
   hmac_secret,
   onResponse,
@@ -34,8 +36,6 @@ function ConfigureAcceptRouter({
 
   return router
 }
-
-const DEFAULT_ACTION = async () => {}
 
 function hasMatchingNotificationHookWithHmacSecret(hmac_secret) {
   if (!hmac_secret)
@@ -88,8 +88,11 @@ function hookWrapper(customAction = DEFAULT_ACTION) {
   return async function(req, res, next) {
     try {
       const response = await customAction(req, res)
-      if (response !== false) {
-        res.status(200).send(response)
+      if (!res.headersSent) {
+        delete req.query.hmac
+        res
+          .status(200)
+          .send(response || req.query.api_source === "IFRAME" ? {} : req.query)
       }
     } catch (error) {
       next(error)
