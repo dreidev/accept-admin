@@ -81,10 +81,10 @@ describe("Accept Admin Authorization", () => {
    */
   test("getNewToken", async () => {
     expect(Accept.token).not.toBe(null)
-    // const oldToken = Accept.token
+    const oldToken = Accept.token
     const newToken = await Accept.getNewToken(/* credentials */)
-    // expect(Accept.token).toEqual(oldToken) // accept decided to return the same token
-    expect(Accept.token).not.toEqual(newToken)
+    expect(Accept.token).toEqual(oldToken) // accept decided to return the same token
+    expect(Accept.token).toEqual(newToken)
   })
   /**
    * Accept Admin has isloggedIn
