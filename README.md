@@ -3,7 +3,7 @@
 Package for managing integration with the accept payment service provided by
 paymobsolutions for lack of an offical one.
 
-[![Build Status](https://travis-ci.org/dreidev/accept-admin.png?branch=master)](https://travis-ci.org/dreidev/accept-admin) [![Coverage Status](https://coveralls.io/repos/github/dreidev/accept-admin/badge.svg?branch=master)](https://coveralls.io/github/dreidev/accept-admin?branch=master) [![NSP Status](https://nodesecurity.io/orgs/dreidev/projects/7c551c3c-8957-4bcd-b0f5-9ddc5e9173bf/badge)](https://nodesecurity.io/orgs/dreidev/projects/7c551c3c-8957-4bcd-b0f5-9ddc5e9173bf)
+[![Coverage Status](https://coveralls.io/repos/github/dreidev/accept-admin/badge.svg?branch=master)](https://coveralls.io/github/dreidev/accept-admin?branch=master) [![NSP Status](https://nodesecurity.io/orgs/dreidev/projects/7c551c3c-8957-4bcd-b0f5-9ddc5e9173bf/badge)](https://nodesecurity.io/orgs/dreidev/projects/7c551c3c-8957-4bcd-b0f5-9ddc5e9173bf)
 
 ## Getting Started
 
