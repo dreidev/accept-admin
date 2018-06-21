@@ -28,19 +28,18 @@ test("computeHmac", () => {
 
 test("authorizeResponse", () => {
   const data = RESPONSE_HMAC_FIELDS_DATA
-  let hmac = Hmac512(
-    RESPONSE_HMAC_FIELDS.map(() => 1).join(""),
-    hmac_secret
-  ).toString()
+  let hmac = computeHmac({
+    hmac_secret,
+    data,
+    fields: RESPONSE_HMAC_FIELDS,
+    useLiteralKeys: true,
+  })
   expect(authorizeResponse({ hmac_secret, hmac, data })).toBe(true)
 })
 
 test("authorizeDeliveryStatus", () => {
   const data = DELIVERY_HMAC_FIELDS_DATA
-  let hmac = Hmac512(
-    DELIVERY_HMAC_FIELDS.map(() => 1).join(""),
-    hmac_secret
-  ).toString()
+  let hmac = computeHmac({ hmac_secret, data, fields: DELIVERY_HMAC_FIELDS })
   expect(authorizeDeliveryStatus({ hmac_secret, hmac, data })).toBe(true)
 })
 
@@ -49,14 +48,11 @@ test("authorizeToken", () => {
     (m, field) => ({ ...m, [field]: field }),
     {}
   )
-  let hmac = Hmac512(TOKEN_HMAC_FIELDS.join(""), hmac_secret).toString()
+  let hmac = computeHmac({ hmac_secret, data, fields: TOKEN_HMAC_FIELDS })
   expect(authorizeToken({ hmac_secret, hmac, data })).toBe(true)
 })
 test("authorizeTransaction", () => {
   const data = TRANSACTION_HMAC_FIELDS_DATA
-  let hmac = Hmac512(
-    TRANSACTION_HMAC_FIELDS.map(() => 1).join(""),
-    hmac_secret
-  ).toString()
+  let hmac = computeHmac({ hmac_secret, data, fields: TRANSACTION_HMAC_FIELDS })
   expect(authorizeTransaction({ hmac_secret, hmac, data })).toBe(true)
 })

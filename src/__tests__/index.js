@@ -2,10 +2,10 @@ import ACCEPT_CONFIG from "../../config"
 import { DEFAULT_CREDENTIALS, DEFAULT_INTEGRATION } from "../constants"
 import Accept, { AcceptAdmin } from "../index"
 
-// import { mockAllAPIs, removeAPIMock } from "./helper/api_mock"
-// const { NODE_ENV, PORT } = process.env
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000
-// let url
+import { startTunnel, closeTunnel } from "./helper/localtunnel"
+import { startServer, closeServer } from "./helper/util"
+
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 40000
 
 describe("Accept admin instance creation", () => {
   /**
@@ -13,7 +13,7 @@ describe("Accept admin instance creation", () => {
    * import Accept from "accept-admin"
    * and that will most probably be used most of the time
    */
-  test("Accept singlton is and Accept Admin Instace", () => {
+  test("Accept singlton is an Accept Admin Instance", () => {
     expect(Accept).toBeInstanceOf(AcceptAdmin)
   })
   /**
@@ -70,9 +70,9 @@ describe("Accept Admin Authorization", () => {
    */
   test("refreshToken", async () => {
     expect(Accept.token).not.toBe(null)
-    const oldToken = Accept.token
+    // const oldToken = Accept.token
     const newToken = await Accept.refreshToken(/* credentials */)
-    expect(Accept.token).not.toEqual(oldToken)
+    // expect(Accept.token).not.toEqual(oldToken)
     expect(Accept.token).toEqual(newToken)
   })
   /**
@@ -248,5 +248,123 @@ describe("Accept Order and Payment Key", () => {
     expect(paymentClaims.order_id).not.toBe(null)
     expect(paymentClaims.payment_token).not.toBe(null)
     expect(paymentClaims.email).not.toBe(null)
+  })
+})
+
+describe("Accept Pay and Tokenize", async () => {
+  const Accept = new AcceptAdmin() // create seperate instance
+  let card_token = null
+  let void_transaction_id = null
+  let refund_transaction_id = null
+  beforeAll(async () => {
+    const PORT = 3209
+
+    const [{ url: host }] = await Promise.all([
+      startTunnel(PORT),
+      startServer({ PORT }),
+    ])
+
+    console.log(host)
+    console.log(`started localtunnel at ${host}`)
+
+    Accept.config({ ...ACCEPT_CONFIG, host: `${host}` })
+
+    console.log(`initializing accept instance`)
+    await Accept.init()
+
+    let data = await Accept.getIntegrationHooks()
+
+    expect(data.transaction_response_callback).toEqual(
+      `${host}${Accept.integration.response_callback_url}`
+    )
+
+    console.log(`initialized accept instance`)
+  })
+
+  afterAll(async () => {
+    console.log("closing tunnel and server")
+    closeTunnel()
+    closeServer()
+  })
+
+  /**
+   * using the tokenize function
+   * this function will return the order_id, payment_token, email
+   * token does not need to be provided if instance is already loggedin or credentials is set
+   * if any is already present none is recomputed
+   */
+  test("tokenize", async () => {
+    expect(Accept.token).not.toBe(null)
+    console.log(`tokenizing`)
+    const res = await Accept.tokenize({
+      source: ACCEPT_CONFIG.REAL_CARD,
+    })
+    console.log(`tokenized`)
+    expect(res.token).not.toBe(null)
+    card_token = res.token
+  })
+
+  /**
+   * using the pay function
+   * this function will return the order_id, payment_token, email
+   * token does not need to be provided if instance is already loggedin or credentials is set
+   * if any is already present none is recomputed
+   */
+  test("pay", async () => {
+    expect(Accept.token).not.toBe(null)
+    console.log(`paying`)
+    const res = await Accept.pay({
+      source: { ...ACCEPT_CONFIG.REAL_CARD, subtype: "CARD" },
+      amount_cents: 217,
+    })
+    void_transaction_id = res.id
+    expect(res.amount_cents).toEqual(217)
+  })
+
+  /**
+   * using the pay function with card token collected from the tokenization test
+   * just setting card_token should substitute for including the card source
+   */
+  test("paying with token", async () => {
+    expect(Accept.token).not.toBe(null)
+    expect(card_token).not.toBe(null)
+    console.log(`paying with token`)
+    const res = await Accept.pay({
+      card_token,
+      amount_cents: 218,
+    })
+    refund_transaction_id = res.id
+
+    expect(+res.amount_cents).toEqual(218)
+  })
+
+  /**
+   * paritally refunding transaction using transaction_id from last payment
+   * refund is never full as the payment processor fees are still applied
+   */
+  test("refund transaction", async () => {
+    expect(Accept.token).not.toBe(null)
+    expect(refund_transaction_id).not.toBe(null)
+    const res = await Accept.refundTransaction({
+      transaction_id: refund_transaction_id,
+      amount_cents: 218,
+    })
+    expect(res.amount_cents).toEqual(218)
+    expect(res.parent_transaction).toEqual(refund_transaction_id)
+  })
+
+  /**
+   * void transaction using transaction_id from last payment
+   * this can only be used within the first 24 hours of a tranasction
+   * voiding a transaction refunds it completly with no extra charge
+   */
+  test("void transaction", async () => {
+    expect(Accept.token).not.toBe(null)
+    expect(void_transaction_id).not.toBe(null)
+    const res = await Accept.voidTransaction({
+      transaction_id: void_transaction_id,
+    })
+    expect(res.is_void).toEqual(true)
+    expect(res.parent_transaction).toEqual(+void_transaction_id)
   })
 })

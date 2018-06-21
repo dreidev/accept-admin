@@ -63,6 +63,7 @@ export class AcceptAdmin {
   async login(credentials) {
     this.credentials = { ...this.credentials, ...credentials }
     const profile = (await getUser(this.credentials)).data
+
     this.token = profile.token
     this.merchant_id = profile.id
     return profile
